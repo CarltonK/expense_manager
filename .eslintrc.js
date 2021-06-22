@@ -24,7 +24,6 @@ module.exports = {
       "@typescript-eslint/no-empty-interface": "warn",
       "@typescript-eslint/no-floating-promises": "error",
       "@typescript-eslint/no-namespace": "error",
-      "@typescript-eslint/no-unnecessary-type-assertion": "error",
       "@typescript-eslint/prefer-for-of": "warn",
       "@typescript-eslint/triple-slash-reference": "error",
       "@typescript-eslint/unified-signatures": "warn",
