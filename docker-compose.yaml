@@ -1,0 +1,40 @@
+version: '3.6'
+
+services:
+  mysql:
+    image: mysql:5.7.21
+    restart: always
+    volumes:
+      - expy:/var/lib/mysql
+    ports:
+      - 3306:3306
+    environment:
+      MYSQL_ROOT_PASSWORD: "root"
+      MYSQL_DATABASE: "expy-db"
+      MYSQL_USER: "expy"
+      MYSQL_PASSWORD: "expy"
+
+  expy:
+    container_name: expy
+    build:
+      context: .
+      dockerfile: docker/dev.Dockerfile
+    volumes:   # Binds volume to enable working through docker locally
+      - type: bind
+        source: ./src/
+        target: /app/src/
+      - type: bind
+        source: ./package.json
+        target: /app/package.json
+      - type: bind
+        source: ./tsconfig.json
+        target: /app/tsconfig.json
+    depends_on:
+      - mysql
+    ports:
+      - 3000:3000
+    environment: 
+      PORT: 3000
+  
+volumes:
+    expy:
