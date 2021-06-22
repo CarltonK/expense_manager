@@ -35,6 +35,13 @@ services:
       - 3000:3000
     environment: 
       PORT: 3000
+      NODE_ENV: "local"
+      MYSQL_ROOT_PASSWORD: "root"
+      MYSQL_DATABASE: "expy-db"
+      MYSQL_USER: "expy"
+      MYSQL_PASSWORD: "expy"
+      MYSQL_HOST: "172.18.0.1"
+      MYSQL_PORT: 3306
   
 volumes:
     expy:
