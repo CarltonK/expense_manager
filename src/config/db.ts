@@ -32,7 +32,7 @@ export default class DBConfig {
             this.sequelize = new Sequelize(this.DB!, this.USER!, this.PASSWORD!, {
                 dialect: this.dialect,
                 dialectOptions: {
-                    socketPath: `/cloudsql/${this.CONNECTION_NAME}`
+                    socketPath: `/cloudsql/${this.CONNECTION_NAME}`,
                 },
                 pool: {
                     max: 5,
