@@ -4,6 +4,7 @@ export default class DBConfig {
     private HOST;
     private USER;
     private PASSWORD;
+    private CONNECTION_NAME;
     private DB;
     private dialect: Dialect = 'mysql';
     private sequelize: Sequelize;
@@ -14,17 +15,33 @@ export default class DBConfig {
         this.USER = process.env.MYSQL_USER;
         this.PASSWORD = process.env.MYSQL_PASSWORD;
         this.DB = process.env.MYSQL_DATABASE;
+        this.CONNECTION_NAME = process.env.CONNECTION_NAME;
 
-        this.sequelize = new Sequelize(this.DB!, this.USER!, this.PASSWORD!, {
-            host: this.HOST!,
-            dialect: this.dialect,
-            pool: {
-                max: 5,
-                min: 0,
-                acquire: 30000,
-                idle: 10000,
-            },
-        });
+        if (process.env.NODE_ENV === 'local') {
+            this.sequelize = new Sequelize(this.DB!, this.USER!, this.PASSWORD!, {
+                host: this.HOST!,
+                dialect: this.dialect,
+                pool: {
+                    max: 5,
+                    min: 0,
+                    acquire: 30000,
+                    idle: 10000,
+                },
+            });
+        } else {
+            this.sequelize = new Sequelize(this.DB!, this.USER!, this.PASSWORD!, {
+                dialect: this.dialect,
+                dialectOptions: {
+                    socketPath: `/cloudsql/${this.CONNECTION_NAME}`
+                },
+                pool: {
+                    max: 5,
+                    min: 0,
+                    acquire: 30000,
+                    idle: 10000,
+                },
+            });
+        }
 
         Promise.resolve(this.testConnection()).catch(error => console.log('Database connection error: ', error));
     }
