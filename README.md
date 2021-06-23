@@ -1,1 +1,1 @@
-# expense_manager
+# A personal expense manager
