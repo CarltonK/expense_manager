@@ -17,16 +17,13 @@ export default class DBConfig {
         this.DB = process.env.MYSQL_DATABASE;
         this.CONNECTION_NAME = process.env.CONNECTION_NAME;
 
+        const pool = { max: 5, min: 0, acquire: 30000, idle: 10000 }
+
         if (process.env.NODE_ENV === 'local') {
             this.sequelize = new Sequelize(this.DB!, this.USER!, this.PASSWORD!, {
                 host: this.HOST!,
                 dialect: this.dialect,
-                pool: {
-                    max: 5,
-                    min: 0,
-                    acquire: 30000,
-                    idle: 10000,
-                },
+                pool: pool,
             });
         } else {
             this.sequelize = new Sequelize(this.DB!, this.USER!, this.PASSWORD!, {
@@ -34,12 +31,7 @@ export default class DBConfig {
                 dialectOptions: {
                     socketPath: `/cloudsql/${this.CONNECTION_NAME}`,
                 },
-                pool: {
-                    max: 5,
-                    min: 0,
-                    acquire: 30000,
-                    idle: 10000,
-                },
+                pool: pool,
             });
         }
 
