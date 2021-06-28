@@ -1,4 +1,5 @@
 import * as express from 'express';
+import errorMiddleware from './middleware/error';
 import LoggerMiddleware from './middleware/logger'
 
 class App {
@@ -11,12 +12,17 @@ class App {
      
         this.initializeMiddlewares();
         this.initializeControllers(controllers);
+        this.initializeErrorHandling();
     }
 
     private initializeMiddlewares() {
         this.app.use( express.json() );
         this.app.use( LoggerMiddleware.log );
     }
+
+    private initializeErrorHandling() {
+        this.app.use(errorMiddleware);
+      }
      
     private initializeControllers(controllers: any[]) {
         controllers.forEach((controller: any) => {
