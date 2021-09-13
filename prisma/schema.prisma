@@ -26,8 +26,9 @@ model Expense {
 
 model User {
   id                  Int       @id @default(autoincrement())
-  identificationValue Int       @unique
-  phoneNumber         Int
+  identificationValue String    @unique @db.VarChar(255)
+  password            String
+  phoneNumber         String
   name                String?
   registeredAt        DateTime  @default(now())
   expenses            Expense[]
