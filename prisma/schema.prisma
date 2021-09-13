@@ -1,0 +1,40 @@
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+// ############
+// * MODELS *
+// ############
+
+model Expense {
+  id            Int         @id @default(autoincrement())
+  title         String      @db.VarChar(255)
+  category      String?
+  isPaid        Boolean     @default(false)
+  author        User        @relation(fields: [authorId], references: [id])
+  authorId      Int
+  paymentMode   PaymentMode @relation(fields: [paymentModeId], references: [id])
+  paymentModeId Int
+  createdAt     DateTime    @default(now())
+  isDueOn       DateTime
+}
+
+model User {
+  id                  Int       @id @default(autoincrement())
+  identificationValue Int       @unique
+  phoneNumber         Int
+  name                String?
+  registeredAt        DateTime  @default(now())
+  expenses            Expense[]
+}
+
+model PaymentMode {
+  id      Int       @id @default(autoincrement())
+  mode    String
+  Expense Expense[]
+}

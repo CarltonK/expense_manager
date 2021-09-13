@@ -6,7 +6,8 @@ import UserController from './controllers/user';
 
 const port = process.env.PORT || 8080;
 
-new DBConfig();
+const db = new DBConfig();
+export default db;
 
 const app = new App(
   [
