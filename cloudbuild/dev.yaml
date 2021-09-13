@@ -1,26 +1,39 @@
- steps:
- # Build the container image
- - name: 'gcr.io/cloud-builders/docker'
-   args: ['build', '-f', 'docker/prod.Dockerfile', '-t', 'gcr.io/$PROJECT_ID/${_PROJECT_SERVICE}:$COMMIT_SHA', '.']
+steps:
+  # Build the container image
+  - name: "gcr.io/cloud-builders/docker"
+    args:
+      [
+        "build",
+        "-f",
+        "docker/prod.Dockerfile",
+        "--build-arg DB_USER=${_DB_USER}",
+        "--build-arg DB_PASS=${_DB_PASS}",
+        "--build-arg DB_HOST=${_DB_HOST}",
+        "--build-arg DB_PORT=${_DB_PORT}",
+        "--build-arg DB_NAME=${_DB_NAME}",
+        "-t",
+        "gcr.io/$PROJECT_ID/${_PROJECT_SERVICE}:$COMMIT_SHA",
+        ".",
+      ]
 
- # Push the container image to Container Registry
- - name: 'gcr.io/cloud-builders/docker'
-   args: ['push', 'gcr.io/$PROJECT_ID/${_PROJECT_SERVICE}:$COMMIT_SHA']
+  # Push the container image to Container Registry
+  - name: "gcr.io/cloud-builders/docker"
+    args: ["push", "gcr.io/$PROJECT_ID/${_PROJECT_SERVICE}:$COMMIT_SHA"]
 
- # Deploy container image to Cloud Run
- - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
-   entrypoint: gcloud
-   args:
-   - 'run'
-   - 'deploy'
-   - '${_PROJECT_SERVICE}'
-   - '--image'
-   - 'gcr.io/$PROJECT_ID/${_PROJECT_SERVICE}:$COMMIT_SHA'
-   - '--region'
-   - '${_PROJECT_REGION}'
-   - '--platform'
-   - 'managed'
-   - '--add-cloudsql-instances'
-   - '${_CONNECTION_NAME}'
- images:
- - 'gcr.io/$PROJECT_ID/${_PROJECT_SERVICE}:$COMMIT_SHA'
+  # Deploy container image to Cloud Run
+  - name: "gcr.io/google.com/cloudsdktool/cloud-sdk"
+    entrypoint: gcloud
+    args:
+      - "run"
+      - "deploy"
+      - "${_PROJECT_SERVICE}"
+      - "--image"
+      - "gcr.io/$PROJECT_ID/${_PROJECT_SERVICE}:$COMMIT_SHA"
+      - "--region"
+      - "${_PROJECT_REGION}"
+      - "--platform"
+      - "managed"
+      - "--add-cloudsql-instances"
+      - "${_CONNECTION_NAME}"
+images:
+  - "gcr.io/$PROJECT_ID/${_PROJECT_SERVICE}:$COMMIT_SHA"
