@@ -20,5 +20,7 @@
    - '${_PROJECT_REGION}'
    - '--platform'
    - 'managed'
+   - '--add-cloudsql-instances'
+   - '${_CONNECTION_NAME}'
  images:
  - 'gcr.io/$PROJECT_ID/${_PROJECT_SERVICE}:$COMMIT_SHA'
