@@ -35,6 +35,7 @@ FROM node:12-alpine
 RUN mkdir -p /app
 RUN mkdir -p /app/lib/
 RUN mkdir -p /app/node_modules/
+RUN mkdir -p /app/prisma/
 
 WORKDIR /app
 
