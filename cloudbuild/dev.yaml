@@ -20,7 +20,6 @@ steps:
   # Push the container image to Container Registry
   - id: "Push docker image"
     name: "gcr.io/cloud-builders/docker"
-    entrypoint: sh
     args: ["push", "gcr.io/$PROJECT_ID/${_PROJECT_SERVICE}:$COMMIT_SHA"]
 
   # Deploy container image to Cloud Run
