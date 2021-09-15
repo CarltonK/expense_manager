@@ -1,8 +1,11 @@
-FROM node:12-alpine
+###########################
+# STAGE 1: Build artifacts 
+###########################
 
-ARG DB_USER, DB_PASS, DB_HOST, DB_PORT, DB_NAME
+FROM node:12-alpine as build
 
-WORKDIR /app
+RUN mkdir -p /app
+RUN mkdir -p /app/lib
 
 # add `/app/node_modules/.bin` to $PATH
 ENV PATH /app/node_modules/.bin:$PATH
@@ -12,20 +15,35 @@ COPY package*.json ./
 
 RUN npm i
 
-COPY . /app
+COPY . /app/
 
+WORKDIR /app
+
+# Lint 
+RUN npm i -g eslint
+RUN npm i -g typescript
 RUN npm run lint
 
-RUN sed -i 's/#{DB_USER}#/$DB_USER/g' .env
-RUN sed -i 's/#{DB_PASS}#/$DB_PASS/g' .env
-RUN sed -i 's/#{DB_HOST}#/$DB_HOST/g' .env
-RUN sed -i 's/#{DB_PORT}#/$DB_PORT/g' .env
-RUN sed -i 's/#{DB_NAME}#/$DB_NAME/g' .env
-
+# Build
 RUN npm run build
 
-ENV PORT 3000
+###########################
+# STAGE 2: Take build artifacts 
+###########################
+FROM node:12-alpine
 
-EXPOSE 3000
+RUN mkdir -p /app
+RUN mkdir -p /app/lib/
+RUN mkdir -p /app/node_modules/
+
+WORKDIR /app
+
+COPY --from=build /app/lib /app/lib
+COPY --from=build /app/package.json /app/package.json
+COPY --from=build /app/package-lock.json /app/package-lock.json
+COPY --from=build /app/node_modules/ /app/node_modules/
+
+ENV PORT 8080
+EXPOSE 8080
 
 CMD [ "npm", "run", "start" ]

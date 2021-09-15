@@ -12,6 +12,7 @@ class UserController {
 
   public intializeRoutes() {
     this.router.post(this.path, this.createUser.bind(this));
+    this.router.get(this.path, this.getUsers.bind(this));
   }
 
   createUser = async (request: express.Request, response: express.Response) => {
@@ -46,6 +47,22 @@ class UserController {
             name,
           },
         },
+      });
+    } catch (error) {
+      response.status(500).send({
+        status: false,
+        detail: `${error}`,
+      });
+    }
+  }
+
+  getUsers = async (request: express.Request, response: express.Response) => {
+    try {
+      const users = await db.prisma.user.findMany({});
+      console.log('Users: ', users);
+      response.status(200).send({
+        status: true,
+        detail: { users },
       });
     } catch (error) {
       response.status(500).send({

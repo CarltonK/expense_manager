@@ -6,9 +6,12 @@
   "scripts": {
     "lint": "eslint \"src/**/*\"",
     "build": "tsc",
-    "build:dev": "nodemon src/server.ts",
+    "build:dev": "npm run prisma:init && nodemon src/server.ts",
     "start": "node lib/server.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "migrations:local": "npx prisma migrate dev --name init",
+    "migrations:prod": "npx prisma migrate deploy",
+    "prisma:init": "npx prisma generate"
   },
   "repository": {
     "type": "git",

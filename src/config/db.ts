@@ -3,6 +3,7 @@ import { exec } from "child_process"
 
 export default class DBConfig {
     public prisma: PrismaClient;
+
     constructor() {
         this.prisma = new PrismaClient();
         this.runMigrations().catch(error => console.error(error));
@@ -10,7 +11,7 @@ export default class DBConfig {
 
     async runMigrations() {
         return new Promise((resolve, reject) => {
-            exec('npx prisma migrate dev --name init', { maxBuffer: 1024 * 500 }, (error, stdout, stderr) => {
+            exec('npm run migrations:prod', { maxBuffer: 1024 * 500 }, (error, stdout, stderr) => {
                 if (error) {
                     console.warn(error);
                 } else if (stdout) {
