@@ -17,9 +17,16 @@ npm run lint
 
 echo
 echo "************************"
-echo "* Build application *"
+echo "* Variable subsitituion *"
 echo "************************"
 echo
 
 awk '{gsub(/<DATABASE_URL>/,"'$1'")}1' /workspace/.env >/workspace/tmp.env && mv /workspace/tmp.env /workspace/.env
+
+echo
+echo "************************"
+echo "* Build application *"
+echo "************************"
+echo
+
 npm run build
