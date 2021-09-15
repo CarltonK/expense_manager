@@ -38,6 +38,8 @@ RUN mkdir -p /app/node_modules/
 
 WORKDIR /app
 
+COPY --from=build /app/.env /app/.env
+COPY --from=build /app/prisma/ /app/prisma/
 COPY --from=build /app/lib /app/lib
 COPY --from=build /app/package.json /app/package.json
 COPY --from=build /app/package-lock.json /app/package-lock.json
