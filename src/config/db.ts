@@ -6,6 +6,7 @@ export default class DBConfig {
 
     constructor() {
         this.prisma = new PrismaClient();
+        this.runMigrations().catch(error => console.error(error));
     }
 
     async runMigrations() {
