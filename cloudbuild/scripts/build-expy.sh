@@ -21,7 +21,7 @@ echo "* Variable subsitituion *"
 echo "************************"
 echo
 
-awk '{gsub(/<DATABASE_URL>/,"'$1'")}1' /workspace/.env >/workspace/tmp.env && mv /workspace/tmp.env /workspace/.env
+awk '{gsub(/<DATABASE_URL>/,"'$1'")}1' .env > tmp.env && mv tmp.env .env
 
 echo
 echo "************************"
