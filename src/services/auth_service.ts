@@ -13,7 +13,7 @@ export default class AuthService {
     }
 
     async userRegistration(data: any): Promise<any> {
-        let { password } = data;
+        const { password } = data;
         try {
             data.password = await hash(password, 10);
             const user = await db.prisma.user.create({ data });
