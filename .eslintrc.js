@@ -42,7 +42,6 @@ module.exports = {
           allowEmptyCatch: true,
         },
       ],
-      "no-invalid-this": "error",
       "no-new-wrappers": "error",
       "no-param-reassign": "error",
       "no-redeclare": "error",

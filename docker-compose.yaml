@@ -2,6 +2,7 @@ version: '3.6'
 
 services:
   mysql:
+    container_name: expy_db
     image: mysql:5.7.21
     restart: always
     volumes:
@@ -13,9 +14,8 @@ services:
       MYSQL_DATABASE: "expy-db"
       MYSQL_USER: "expy"
       MYSQL_PASSWORD: "expy"
-
   expy:
-    container_name: expy
+    container_name: expy_worker
     build:
       context: .
       dockerfile: docker/dev.Dockerfile
@@ -29,19 +29,16 @@ services:
       - type: bind
         source: ./tsconfig.json
         target: /app/tsconfig.json
+      - type: bind
+        source: ./prisma/
+        target: /app/prisma/
     depends_on:
       - mysql
     ports:
       - 3000:3000
     environment: 
       PORT: 3000
+      ACCESS_TOKEN: "secret"
       NODE_ENV: "local"
-      MYSQL_ROOT_PASSWORD: "root"
-      MYSQL_DATABASE: "expy-db"
-      MYSQL_USER: "expy"
-      MYSQL_PASSWORD: "expy"
-      MYSQL_HOST: "172.18.0.1"
-      MYSQL_PORT: 3306
-  
 volumes:
     expy:

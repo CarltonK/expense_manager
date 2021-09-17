@@ -1,57 +1,52 @@
 import * as express from 'express';
-import MissingParamException from '../exceptions/missing_param_exception';
 import db from '../server';
+import AuthService from '../services/auth_service';
+import MissingParamException from '../exceptions/missing_param_exception';
+import AuthMiddleware from '../middlewares/auth';
 
 class UserController {
   public path = '/user';
   public router = express.Router();
+  private auth: AuthService;
 
   constructor() {
     this.intializeRoutes();
+    this.auth = new AuthService();
   }
 
   public intializeRoutes() {
     this.router.post(this.path, this.createUser.bind(this));
-    this.router.get(this.path, this.getUsers.bind(this));
+    this.router.get(this.path, AuthMiddleware.auth, this.getUsers.bind(this));
   }
 
   createUser = async (request: express.Request, response: express.Response) => {
 
     try {
-      const { name, identificationValue, phoneNumber, password } = request.body;
+      const { userId, password, phoneNumber } = request.body;
 
-      if (!name) {
-        throw new MissingParamException('Name')
-      }
-
-      if (!identificationValue) {
-        throw new MissingParamException('Identification Value')
-      }
-
-      if (!phoneNumber) {
-        throw new MissingParamException('Phone Number')
+      if (!userId) {
+        throw new MissingParamException('userId');
       }
 
       if (!password) {
-        throw new MissingParamException('Password')
+        throw new MissingParamException('password');
       }
 
-      await db.prisma.user.create({
-        data: request.body,
-      });
+      if (!phoneNumber) {
+        throw new MissingParamException('phoneNumber');
+      }
+
+      const user = await this.auth.userRegistration(request.body);
 
       response.status(201).send({
         status: true,
-        detail: {
-          user: {
-            name,
-          },
-        },
+        detail: 'Account created successfully',
+        data: user,
       });
-    } catch (error) {
-      response.status(500).send({
+    } catch (error: any) {
+      response.status(error.expyCode).send({
         status: false,
-        detail: `${error}`,
+        detail: `${error.message}`,
       });
     }
   }
@@ -59,10 +54,10 @@ class UserController {
   getUsers = async (request: express.Request, response: express.Response) => {
     try {
       const users = await db.prisma.user.findMany({});
-      console.log('Users: ', users);
       response.status(200).send({
         status: true,
-        detail: { users },
+        detail: "success",
+        data: { users },
       });
     } catch (error) {
       response.status(500).send({

@@ -1,3 +1,5 @@
+ARG tag=latest
+
 ###########################
 # STAGE 1: Build artifacts 
 ###########################
@@ -13,8 +15,6 @@ ENV PATH /app/node_modules/.bin:$PATH
 # install and cache app dependencies
 COPY package*.json ./
 
-RUN npm i
-
 COPY . /app/
 
 WORKDIR /app
@@ -22,6 +22,7 @@ WORKDIR /app
 # Lint 
 RUN npm i -g eslint
 RUN npm i -g typescript
+RUN npm i
 RUN npm run lint
 
 # Build
@@ -31,6 +32,10 @@ RUN npm run build
 # STAGE 2: Take build artifacts 
 ###########################
 FROM node:12-alpine
+
+ARG tag
+
+ENV VERSION_TAG ${tag}
 
 RUN mkdir -p /app
 RUN mkdir -p /app/lib/

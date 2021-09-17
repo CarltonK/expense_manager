@@ -17,5 +17,7 @@ const app = new App(
   ],
   port,
 );
- 
-app.listen();
+
+db.runMigrations()
+  .then(value => { app.listen() })
+  .catch((error) => { process.exit(1) })

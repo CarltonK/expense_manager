@@ -5,7 +5,7 @@ class MissingParamException extends HttpException {
     constructor(param: string) {
         super(400, `Invalid Parameters`);
         this.param = param;
-        this.detail = `${this.param} is missing`;
+        this.message = `${this.param} is missing`;
     }
 }
 
