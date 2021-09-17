@@ -2,6 +2,7 @@ import * as express from 'express';
 import db from '../server';
 import AuthService from '../services/auth_service';
 import MissingParamException from '../exceptions/missing_param_exception';
+import AuthMiddleware from '../middlewares/auth';
 
 class UserController {
   public path = '/user';
@@ -15,7 +16,7 @@ class UserController {
 
   public intializeRoutes() {
     this.router.post(this.path, this.createUser.bind(this));
-    this.router.get(this.path, this.getUsers.bind(this));
+    this.router.get(this.path, AuthMiddleware.auth, this.getUsers.bind(this));
   }
 
   createUser = async (request: express.Request, response: express.Response) => {
@@ -53,10 +54,10 @@ class UserController {
   getUsers = async (request: express.Request, response: express.Response) => {
     try {
       const users = await db.prisma.user.findMany({});
-      console.log('Users: ', users);
       response.status(200).send({
         status: true,
-        detail: { users },
+        detail: "success",
+        data: { users },
       });
     } catch (error) {
       response.status(500).send({
