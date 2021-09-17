@@ -1,19 +1,18 @@
 version: '3.6'
 
 services:
-  mysql:
+  postgres:
     container_name: expy_db
-    image: mysql:5.7.21
+    image:  postgres:11.2-alpine
     restart: always
     volumes:
-      - expy:/var/lib/mysql
+      - expy:/var/lib/postgresql/data
     ports:
-      - 3306:3306
+      - 5432:5432
     environment:
-      MYSQL_ROOT_PASSWORD: "root"
-      MYSQL_DATABASE: "expy-db"
-      MYSQL_USER: "expy"
-      MYSQL_PASSWORD: "expy"
+      POSTGRES_PASSWORD: "expy"
+      POSTGRES_DB: "expy-db"
+      POSTGRES_USER: "expy"
   expy:
     container_name: expy_worker
     build:
@@ -33,7 +32,7 @@ services:
         source: ./prisma/
         target: /app/prisma/
     depends_on:
-      - mysql
+      - postgres
     ports:
       - 3000:3000
     environment: 
