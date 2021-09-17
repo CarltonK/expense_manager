@@ -4,7 +4,7 @@ datasource db {
 }
 
 generator client {
-  provider      = "prisma-client-js"
+  provider = "prisma-client-js"
 }
 
 // ############
@@ -25,13 +25,14 @@ model Expense {
 }
 
 model User {
-  id                  Int       @id @default(autoincrement())
-  identificationValue String    @unique @db.VarChar(255)
-  password            String
-  phoneNumber         String
-  name                String?
-  registeredAt        DateTime  @default(now())
-  expenses            Expense[]
+  id           Int       @id @default(autoincrement())
+  userId       String    @unique @db.VarChar(255)
+  password     String
+  email        String?
+  phoneNumber  String
+  name         String?
+  registeredAt DateTime  @default(now())
+  expenses     Expense[]
 }
 
 model PaymentMode {
