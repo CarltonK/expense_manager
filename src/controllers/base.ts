@@ -15,7 +15,7 @@ class BaseController {
   livenessCheck = (request: express.Request, response: express.Response) => {
     response.status(200).send({
       status: true,
-      detail: 'Expy is live',
+      detail: `Expy (${process.env.NODE_ENV}) is running ${process.env.VERSION_TAG}`,
     });
   }
 
