@@ -35,9 +35,7 @@ export default class AuthService {
                 where: { userId },
             });
 
-            if (!user) {
-                throw new UserNotFound(`${userId}`);
-            }
+            if (!user) throw new UserNotFound(`${userId}`);
 
             const checkPassword = await compare(password, user.password);
 
@@ -49,7 +47,7 @@ export default class AuthService {
             })
 
             const token = await this.jwt.signAccessToken(user);
-            return { userId , token }
+            return { userId, token }
         } catch (error: any) {
             throw new HttpException(400, `${error.message}`);
         }

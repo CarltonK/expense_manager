@@ -22,16 +22,12 @@ class SessionController {
     try {
       const { userId, password } = request.body;
 
-      if (!userId) {
-        throw new MissingParamException('userId');
-      }
+      if (!userId) throw new MissingParamException('userId');
 
-      if (!password) {
-        throw new MissingParamException('password');
-      }
-      
+      if (!password) throw new MissingParamException('password');
+
       const user = await this.auth.userLogin(request.body);
-      
+
       response.status(200).send({
         status: true,
         detail: 'success',
