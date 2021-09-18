@@ -43,6 +43,11 @@ export default class AuthService {
 
             if (!checkPassword) throw new IncorrectCredentialsException();
 
+            await db.prisma.user.update({
+                where: { userId },
+                data: { lastLogin: new Date() }
+            })
+
             const token = await this.jwt.signAccessToken(user);
             return { userId , token }
         } catch (error: any) {
