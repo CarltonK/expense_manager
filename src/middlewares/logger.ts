@@ -20,7 +20,7 @@ class LoggerMiddleware {
                 chunks.push(Buffer.from(chunk));
             }
             const body = Buffer.concat(chunks).toString('utf8');
-            console.log(`Expy said\n##########\n${body}\n##########`);
+            console.log(`\nExpy says:\n${body}\n`);
             (oldEnd as Function).apply(response, arguments);
         };
         if (next) {
