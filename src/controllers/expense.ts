@@ -17,6 +17,7 @@ class ExpenseController {
 
     public intializeRoutes() {
         this.router.get(this.path, auth, this.getExpenses.bind(this));
+        this.router.get(this.path + '/:id', auth, this.getExpenseById.bind(this));
         this.router.post(this.path, auth, this.createExpense.bind(this));
     }
 
@@ -101,6 +102,28 @@ class ExpenseController {
                 status: true,
                 detail: `Expenses retrieved successfully`,
                 data: userExpenses,
+            });
+        } catch (error: any) {
+            response.status(error.expyCode).send({
+                status: false,
+                detail: `${error.message}`,
+            });
+        }
+    }
+
+    getExpenseById = async (request: express.Request, response: express.Response) => {
+        try {
+            let { id }: any = request.params;
+            id = Number(id);
+
+            const data = await db.prisma.expense.findUnique({ where: { id } });
+
+            if (!data) throw new HttpException(400, `Expense does not exist`);
+
+            response.status(200).send({
+                status: true,
+                detail: `Expense retrieved successfully`,
+                data,
             });
         } catch (error: any) {
             response.status(error.expyCode).send({
