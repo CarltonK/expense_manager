@@ -77,11 +77,37 @@ class ExpenseController {
         }
     }
 
-    getExpenses = (request: express.Request, response: express.Response) => {
-        response.status(200).send({
-            status: true,
-            detail: `Expy (${process.env.NODE_ENV}) is running ${process.env.VERSION_TAG}`,
-        });
+    getExpenses = async (request: express.Request, response: express.Response) => {
+        try {
+            // Retrieve user data from token
+            const userToken = request.headers.authorization!.split(' ')[1];
+            const userTokenData: any = await this.jwt.verifyAccessToken(userToken);
+            const { userId } = userTokenData;
+
+            // Check if user with given userId exists
+            const savedUserData = await db.prisma.user.findFirst({
+                where: { userId },
+            });
+
+            if (!savedUserData) throw new HttpException(400, `Please register first`);
+
+            const { id } = savedUserData;
+
+            const userExpenses = await db.prisma.expense.findMany({
+                where: { authorId: id },
+            });
+
+            response.status(200).send({
+                status: true,
+                detail: `Expenses retrieved successfully`,
+                data: userExpenses,
+            });
+        } catch (error: any) {
+            response.status(error.expyCode).send({
+                status: false,
+                detail: `${error.message}`,
+            });
+        }
     }
 
 }
