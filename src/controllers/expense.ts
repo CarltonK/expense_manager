@@ -114,6 +114,9 @@ class ExpenseController {
     getExpenseById = async (request: express.Request, response: express.Response) => {
         try {
             let { id }: any = request.params;
+
+            if (!Number(id)) throw new HttpException(400, `Path parameter must be a number`);
+
             id = Number(id);
 
             const data = await db.prisma.expense.findUnique({ where: { id } });

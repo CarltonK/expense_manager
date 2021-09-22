@@ -3,20 +3,27 @@ import db from '../server';
 import AuthService from '../services/auth_service';
 import MissingParamException from '../exceptions/missing_param_exception';
 import auth from '../middlewares/auth';
+import JwtUtility from '../utils/jwt_utility';
+import HttpException from '../exceptions/http_exception';
 
 class UserController {
   public path = '/user';
   public router = express.Router();
   private auth: AuthService;
+  private jwt: JwtUtility;
+  private userObject: object;
 
   constructor() {
     this.intializeRoutes();
     this.auth = new AuthService();
+    this.jwt = new JwtUtility();
+    this.userObject = {id: true, userId: true, email: true, lastLogin: true, registeredAt: true, name: true, phoneNumber: true };
   }
 
   public intializeRoutes() {
     this.router.post(this.path, this.createUser.bind(this));
-    this.router.get(this.path, auth, this.getUsers.bind(this));
+    this.router.get(this.path, auth, this.getUser.bind(this));
+    this.router.get(this.path + 's', auth, this.getUsers.bind(this));
   }
 
   createUser = async (request: express.Request, response: express.Response) => {
@@ -47,23 +54,40 @@ class UserController {
     }
   }
 
+  getUser = async (request: express.Request, response: express.Response) => {
+    // Retrieve user data from token
+    const userToken = request.headers.authorization!.split(' ')[1];
+    const userTokenData: any = await this.jwt.verifyAccessToken(userToken);
+    const { userId } = userTokenData;
+
+    // Check if user with given userId exists
+    const savedUserData = await db.prisma.user.findUnique({
+      where: { userId },
+      select: this.userObject,
+    });
+
+    if (!savedUserData) throw new HttpException(400, `Please register first`)
+
+    try {
+      response.status(200).send({
+        status: true,
+        detail: `User retrieved successfully`,
+        data: savedUserData,
+      });
+    } catch (error: any) {
+      response.status(error.expyCode).send({
+        status: false,
+        detail: `${error.message}`,
+      });
+    }
+  }
+
   getUsers = async (request: express.Request, response: express.Response) => {
     try {
-      const userObject = {
-        id: true,
-        userId: true,
-        email: true,
-        lastLogin: true,
-        registeredAt: true,
-        name: true,
-        phoneNumber: true,
-        expenses: true,
-      }
-
       const users = await db.prisma.user.findMany({
-        select: userObject,
+        select: this.userObject,
       });
-      
+
       response.status(200).send({
         status: true,
         detail: "success",
