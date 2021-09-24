@@ -1,6 +1,7 @@
 import App from './app';
 import DBConfig from './config/db';
 import BaseController from './controllers/base';
+import ExpenseController from './controllers/expense';
 import SessionController from './controllers/session';
 import UserController from './controllers/user';
 
@@ -14,10 +15,12 @@ const app = new App(
     new BaseController(),
     new SessionController(),
     new UserController(),
+    new ExpenseController(),
   ],
   port,
 );
 
-db.runMigrations()
-  .then(value => { app.listen() })
-  .catch((error) => { process.exit(1) })
+db.runSeeds()
+  .then((value) => db.runMigrations())
+  .then((value) => app.listen())
+  .catch((error) => { console.error(error); process.exit(1) })

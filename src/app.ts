@@ -18,6 +18,8 @@ class App {
     private initializeMiddlewares() {
         this.app.use(express.json());
         this.app.use(LoggerMiddleware.log);
+        if (process.env.NODE_ENV === 'local') this.app.use(LoggerMiddleware.logResponseBody);
+        this.app.set('json spaces', 4)
     }
 
     private initializeErrorHandling() {

@@ -22,4 +22,30 @@ export default class DBConfig {
             });
         });
     }
+
+    async runSeeds() {
+            const paymentModeSeedOps: Promise<any>[] = [
+                this.prisma.paymentMode.upsert({
+                    where: { id: 1 },
+                    update: {},
+                    create: { id: 1, mode: 'Mpesa' },
+                }),
+                this.prisma.paymentMode.upsert({
+                    where: { id: 2 },
+                    update: {},
+                    create: { id: 2, mode: 'Bank Transfer' },
+                }),
+                this.prisma.paymentMode.upsert({
+                    where: { id: 3 },
+                    update: {},
+                    create: { id: 3, mode: 'Credit Card' },
+                }),
+                this.prisma.paymentMode.upsert({
+                    where: { id: 4 },
+                    update: {},
+                    create: { id: 4, mode: 'Cash' },
+                }),
+            ];
+            return Promise.all(paymentModeSeedOps);
+    }
 }

@@ -30,6 +30,7 @@ model User {
   password     String
   email        String?
   phoneNumber  String
+  userToken    String?
   lastLogin    DateTime?
   name         String?
   registeredAt DateTime  @default(now())

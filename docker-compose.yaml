@@ -13,6 +13,7 @@ services:
       POSTGRES_PASSWORD: "expy"
       POSTGRES_DB: "expy-db"
       POSTGRES_USER: "expy"
+      PGDATA: /var/lib/postgresql/data/some_name/
   expy:
     container_name: expy_worker
     build:
