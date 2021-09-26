@@ -62,7 +62,7 @@ class ExpenseController {
                     title: title,
                     paymentModeId: id,
                     isDueOn: new Date(isDueOn),
-                }
+                },
             });
 
             response.status(201).send({
