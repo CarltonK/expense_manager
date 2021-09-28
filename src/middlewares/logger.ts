@@ -20,7 +20,7 @@ class LoggerMiddleware {
                 chunks.push(Buffer.from(chunk));
             }
             const body = Buffer.concat(chunks).toString('utf8');
-            console.log(`\nExpy says:\n${body}\n`);
+            if (process.env.NODE_ENV === 'local') console.log(`\nExpy says:\n${body}\n`);
             (oldEnd as Function).apply(response, arguments);
         };
         if (next) {

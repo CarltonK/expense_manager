@@ -20,7 +20,7 @@ const app = new App(
   port,
 );
 
-db.runSeeds()
-  .then((value) => db.runMigrations())
+db.runMigrations()
+  .then((value) => db.runSeeds())
   .then((value) => app.listen())
   .catch((error) => { console.error(error); process.exit(1) })
