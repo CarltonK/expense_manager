@@ -3,20 +3,18 @@ import db from '../server';
 import AuthService from '../services/auth_service';
 import MissingParamException from '../exceptions/missing_param_exception';
 import auth from '../middlewares/auth';
-import JwtUtility from '../utils/jwt_utility';
 import HttpException from '../exceptions/http_exception';
+import { authUserHelper } from '../helpers/auth_user_helper';
 
 class UserController {
   public path = '/user';
   public router = express.Router();
   private auth: AuthService;
-  private jwt: JwtUtility;
   private userObject: object;
 
   constructor() {
     this.intializeRoutes();
     this.auth = new AuthService();
-    this.jwt = new JwtUtility();
     this.userObject = {id: true, userId: true, email: true, lastLogin: true, registeredAt: true, name: true, phoneNumber: true };
   }
 
@@ -55,10 +53,7 @@ class UserController {
   }
 
   getUser = async (request: express.Request, response: express.Response) => {
-    // Retrieve user data from token
-    const userToken = request.headers.authorization!.split(' ')[1];
-    const userTokenData: any = await this.jwt.verifyAccessToken(userToken);
-    const { userId } = userTokenData;
+    const userId = await authUserHelper(request);
 
     // Check if user with given userId exists
     const savedUserData = await db.prisma.user.findUnique({
@@ -66,7 +61,7 @@ class UserController {
       select: this.userObject,
     });
 
-    if (!savedUserData) throw new HttpException(400, `Please register first`)
+    if (!savedUserData) throw new HttpException(400, `Please register first`);
 
     try {
       response.status(200).send({

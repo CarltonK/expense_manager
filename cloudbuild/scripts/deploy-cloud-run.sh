@@ -6,7 +6,7 @@ echo
 
 gcloud run deploy \
     $1 \
-    --image gcr.io/$2/$1:$3 \
-    --region $4 \
+    --image gcr.io/$2/$1:latest \
+    --region $3 \
     --platform managed \
-    --add-cloudsql-instances $5
+    --add-cloudsql-instances $4

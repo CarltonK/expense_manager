@@ -23,10 +23,15 @@ steps:
         "${COMMIT_SHA}",
       ]
 
+  # Retag the image
+  - id: "Build docker image"
+    name: "gcr.io/cloud-builders/docker"
+    args: ['tag','gcr.io/$PROJECT_ID/${_PROJECT_SERVICE}:$COMMIT_SHA','gcr.io/$PROJECT_ID/${_PROJECT_SERVICE}:latest']
+
   # Push the container image to Container Registry
   - id: "Push docker image"
     name: "gcr.io/cloud-builders/docker"
-    args: ["push", "gcr.io/$PROJECT_ID/${_PROJECT_SERVICE}:$COMMIT_SHA"]
+    args: ["push", "gcr.io/$PROJECT_ID/${_PROJECT_SERVICE}:latest"]
 
   # Deploy container image to Cloud Run
   - id: "Deploy image to Cloud Run"
@@ -37,10 +42,9 @@ steps:
         "/workspace/cloudbuild/scripts/deploy-cloud-run.sh",
         "${_PROJECT_SERVICE}",
         "$PROJECT_ID",
-        "${COMMIT_SHA}",
         "${_PROJECT_REGION}",
         "${_CONNECTION_NAME}",
       ]
 
 images:
-  - "gcr.io/$PROJECT_ID/${_PROJECT_SERVICE}:$COMMIT_SHA"
+  - "gcr.io/$PROJECT_ID/${_PROJECT_SERVICE}:latest"
