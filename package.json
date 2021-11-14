@@ -1,47 +1,47 @@
 {
-  "name": "expense_manager",
-  "version": "1.0.0",
-  "description": "A personal expense manager built in Node, deployed on GCP",
-  "main": "lib/index.js",
-  "scripts": {
-    "lint": "eslint \"src/**/*\"",
-    "build": "tsc",
-    "build:dev": "npm run prisma:init && nodemon src/server.ts",
-    "start": "npm run prisma:init && node lib/server.js",
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "migrations:local": "npx prisma migrate dev --name init",
-    "migrations:prod": "npx prisma migrate deploy",
-    "prisma:init": "npx prisma generate"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/CarltonK/expense_manager.git"
-  },
-  "author": "Mark Carlton",
-  "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/CarltonK/expense_manager/issues"
-  },
-  "homepage": "https://github.com/CarltonK/expense_manager#readme",
-  "dependencies": {
-    "@prisma/client": "^3.0.2",
-    "bcryptjs": "^2.4.3",
-    "express": "^4.17.1",
-    "jsonwebtoken": "^8.5.1"
-  },
-  "devDependencies": {
-    "@types/bcryptjs": "^2.4.2",
-    "@types/express": "^4.17.12",
-    "@types/jsonwebtoken": "^8.5.5",
-    "@types/node": "^15.12.4",
-    "@types/validator": "^13.1.4",
-    "@typescript-eslint/eslint-plugin": "^4.28.0",
-    "@typescript-eslint/parser": "^4.28.0",
-    "eslint": "^7.29.0",
-    "eslint-plugin-import": "^2.23.4",
-    "nodemon": "^2.0.7",
-    "prisma": "^3.0.2",
-    "ts-node": "^10.0.0",
-    "typescript": "^4.3.4"
-  }
+    "name": "expense_manager",
+    "version": "1.0.0",
+    "description": "A personal expense manager built in Node, deployed on GCP",
+    "main": "lib/index.js",
+    "scripts": {
+        "lint": "eslint \"src/**/*\"",
+        "build": "tsc",
+        "build:dev": "npm run prisma:init && nodemon src/server.ts",
+        "start": "npm run prisma:init && node lib/server.js",
+        "test": "echo \"Error: no test specified\" && exit 1",
+        "migrations:local": "npx prisma migrate dev --name init",
+        "migrations:prod": "npx prisma migrate deploy",
+        "prisma:init": "npx prisma generate"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/CarltonK/expense_manager.git"
+    },
+    "author": "Mark Carlton",
+    "license": "ISC",
+    "bugs": {
+        "url": "https://github.com/CarltonK/expense_manager/issues"
+    },
+    "homepage": "https://github.com/CarltonK/expense_manager#readme",
+    "dependencies": {
+        "@prisma/client": "^3.0.2",
+        "bcryptjs": "^2.4.3",
+        "express": "^4.17.1",
+        "jsonwebtoken": "^8.5.1"
+    },
+    "devDependencies": {
+        "@types/bcryptjs": "^2.4.2",
+        "@types/express": "^4.17.12",
+        "@types/jsonwebtoken": "^8.5.5",
+        "@types/node": "^15.12.4",
+        "@types/validator": "^13.1.4",
+        "@typescript-eslint/eslint-plugin": "^4.28.0",
+        "@typescript-eslint/parser": "^4.28.0",
+        "eslint": "^7.29.0",
+        "eslint-plugin-import": "^2.23.4",
+        "nodemon": "^2.0.7",
+        "prisma": "^3.0.2",
+        "ts-node": "^10.0.0",
+        "typescript": "^4.3.4"
+    }
 }
