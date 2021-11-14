@@ -1,18 +1,16 @@
 import * as express from 'express';
 import HttpException from '../exceptions/http_exception';
 import MissingParamException from '../exceptions/missing_param_exception';
+import { authUserHelper } from '../helpers/auth_user_helper';
 import auth from '../middlewares/auth';
 import db from '../server';
-import JwtUtility from '../utils/jwt_utility';
 
 class ExpenseController {
     public path = '/expense';
     public router = express.Router();
-    private jwt: JwtUtility;
 
     constructor() {
         this.intializeRoutes();
-        this.jwt = new JwtUtility();
     }
 
     public intializeRoutes() {
@@ -35,9 +33,7 @@ class ExpenseController {
             if (!isDueOn) throw new MissingParamException('isDueOn');
 
             // Retrieve user data from token
-            const userToken = request.headers.authorization!.split(' ')[1];
-            const userTokenData: any = await this.jwt.verifyAccessToken(userToken);
-            const { userId } = userTokenData;
+            const userId = await authUserHelper(request);
 
             // Check if user with given userId exists
             const savedUserData = await db.prisma.user.findFirst({
@@ -81,9 +77,7 @@ class ExpenseController {
     getExpenses = async (request: express.Request, response: express.Response) => {
         try {
             // Retrieve user data from token
-            const userToken = request.headers.authorization!.split(' ')[1];
-            const userTokenData: any = await this.jwt.verifyAccessToken(userToken);
-            const { userId } = userTokenData;
+            const userId = await authUserHelper(request);
 
             // Check if user with given userId exists
             const savedUserData = await db.prisma.user.findFirst({
