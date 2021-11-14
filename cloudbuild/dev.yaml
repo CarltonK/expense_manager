@@ -26,12 +26,12 @@ steps:
   # Retag the image
   - id: "Build docker image"
     name: "gcr.io/cloud-builders/docker"
-    args: ['tag','gcr.io/$PROJECT_ID/${_PROJECT_SERVICE}:$COMMIT_SHA','gcr.io/$PROJECT_ID/${_PROJECT_SERVICE}:latest']
+    args: ['tag','gcr.io/$PROJECT_ID/${_PROJECT_SERVICE}:$COMMIT_SHA','gcr.io/$PROJECT_ID/${_PROJECT_SERVICE}:latest-unstable']
 
   # Push the container image to Container Registry
   - id: "Push docker image"
     name: "gcr.io/cloud-builders/docker"
-    args: ["push", "gcr.io/$PROJECT_ID/${_PROJECT_SERVICE}:latest"]
+    args: ["push", "gcr.io/$PROJECT_ID/${_PROJECT_SERVICE}:latest-unstable"]
 
   # Deploy container image to Cloud Run
   - id: "Deploy image to Cloud Run"
@@ -47,4 +47,4 @@ steps:
       ]
 
 images:
-  - "gcr.io/$PROJECT_ID/${_PROJECT_SERVICE}:latest"
+  - "gcr.io/$PROJECT_ID/${_PROJECT_SERVICE}:latest-unstable"
